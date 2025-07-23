@@ -44,10 +44,4 @@ This Flutter project is part of my internship at **Developer Hub Corporation** d
 - VS Code or Android Studio
 - Internet connection
 
-### Run Locally
 
-```bash
-git clone https://github.com/MuhammadArslan813/intership_cycle_two.git
-cd intership_cycle_two
-flutter pub get
-flutter run
