@@ -45,3 +45,18 @@ This Flutter project is part of my internship at **Developer Hub Corporation** d
 - Internet connection
 
 
+## 📅 Week 5: Modern UI Redesigns
+
+This week we enhanced the user interface of key screens to follow modern Flutter UI/UX design principles.
+
+### ✅ Changes Done:
+
+- 🧑‍💼 `UserProfileScreen`: Now includes a circular avatar, name, and email in a cleaner layout.
+- 🔐 `LoginScreen`: Redesigned with custom icons, rounded text fields, and button styling.
+- 🆕 `SignupScreen`: Completely updated with a scroll-safe layout, icon fields, and improved form inputs.
+
+### 🧪 Improvements:
+- Responsive layout using `SingleChildScrollView` and `SafeArea`.
+- Reusable and modern input decorations.
+- More visually pleasing color palette with teal accent.
+
