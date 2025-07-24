@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intership_cycle_two/tas_list.dart';
 import 'package:intership_cycle_two/userprofile_screen.dart';
-import 'api_services.dart';
+import 'package:intership_cycle_two/api_services.dart';
 
 class UserListScreen extends StatelessWidget {
   const UserListScreen({super.key});
@@ -13,6 +14,20 @@ class UserListScreen extends StatelessWidget {
         title: const Text("User List"),
         backgroundColor: Colors.teal,
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.task_alt),
+            tooltip: "Go to Tasks",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>  TaskListScreen(),
+                ),
+              );
+            },
+          )
+        ],
       ),
       body: FutureBuilder<List<Map>>(
         future: ApiService().fetchUsers(),
@@ -32,9 +47,8 @@ class UserListScreen extends StatelessWidget {
             itemCount: users.length,
             itemBuilder: (context, index) {
               final user = users[index];
-
-              // Use Dicebear API which works reliably
-              final avatarUrl = "https://api.dicebear.com/7.x/adventurer/png?seed=${user['id']}";
+              final avatarUrl =
+                  "https://api.dicebear.com/7.x/adventurer/png?seed=${user['id']}";
 
               return Card(
                 elevation: 3,
@@ -42,7 +56,8 @@ class UserListScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   leading: CircleAvatar(
                     radius: 28,
                     backgroundColor: Colors.grey.shade200,
@@ -61,7 +76,8 @@ class UserListScreen extends StatelessWidget {
                     user['email'],
                     style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.teal),
+                  trailing: const Icon(Icons.arrow_forward_ios,
+                      size: 18, color: Colors.teal),
                   onTap: () {
                     Navigator.push(
                       context,

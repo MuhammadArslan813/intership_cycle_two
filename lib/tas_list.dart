@@ -1,4 +1,3 @@
-// screens/task_list_screen.dart
 import 'package:flutter/material.dart';
 import 'package:intership_cycle_two/task_provider.dart';
 import 'package:provider/provider.dart';
@@ -13,52 +12,111 @@ class TaskListScreen extends StatelessWidget {
     final taskProvider = Provider.of<TaskProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Task Manager")),
+      backgroundColor: const Color(0xFFF2F2F2),
+      appBar: AppBar(
+        title: const Text("📝 My Tasks"),
+        centerTitle: true,
+        backgroundColor: Colors.teal,
+        elevation: 4,
+      ),
       body: Column(
         children: [
+          const SizedBox(height: 10),
+
+          /// Task List
           Expanded(
-            child: ListView.builder(
+            child: taskProvider.tasks.isEmpty
+                ? const Center(
+              child: Text(
+                "No tasks yet. Add one!",
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            )
+                : ListView.builder(
+              padding: const EdgeInsets.all(12),
               itemCount: taskProvider.tasks.length,
               itemBuilder: (context, index) {
                 final task = taskProvider.tasks[index];
-                return ListTile(
-                  title: Text(
-                    task.title,
-                    style: TextStyle(
-                      decoration: task.isDone ? TextDecoration.lineThrough : null,
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade300,
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      )
+                    ],
+                  ),
+                  child: ListTile(
+                    leading: Checkbox(
+                      activeColor: Colors.teal,
+                      value: task.isDone,
+                      onChanged: (_) => taskProvider.toggleTask(index),
                     ),
-                  ),
-                  leading: Checkbox(
-                    value: task.isDone,
-                    onChanged: (_) => taskProvider.toggleTask(index),
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => taskProvider.deleteTask(index),
+                    title: Text(
+                      task.title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        decoration: task.isDone
+                            ? TextDecoration.lineThrough
+                            : null,
+                        color: task.isDone ? Colors.grey : Colors.black,
+                      ),
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.redAccent),
+                      onPressed: () => taskProvider.deleteTask(index),
+                    ),
                   ),
                 );
               },
             ),
           ),
+
+          /// Task Input Field
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: taskCtrl,
-                    decoration: const InputDecoration(hintText: "Add new task"),
+                    decoration: InputDecoration(
+                      hintText: "Enter new task",
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    if (taskCtrl.text.trim().isNotEmpty) {
-                      taskProvider.addTask(taskCtrl.text);
-                      taskCtrl.clear();
-                    }
-                  },
-                ),
+                const SizedBox(width: 10),
+                Material(
+                  color: Colors.teal,
+                  borderRadius: BorderRadius.circular(12),
+                  child: InkWell(
+                    onTap: () {
+                      if (taskCtrl.text.trim().isNotEmpty) {
+                        taskProvider.addTask(taskCtrl.text.trim());
+                        taskCtrl.clear();
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    child: const Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Icon(Icons.add, color: Colors.white),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
