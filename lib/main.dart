@@ -1,10 +1,25 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:intership_cycle_two/user_profile_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+
+  await Firebase.initializeApp(
+    options: kIsWeb
+        ? const FirebaseOptions(
+      apiKey: "AIzaSyCkWuspvlmBniW30Lor-e9PT-9IxOBcXzM",
+      authDomain: "project-6433460138144569208.firebaseapp.com",
+      projectId: "project-6433460138144569208",
+      storageBucket: "project-6433460138144569208.appspot.com", // ✅ FIXED
+      messagingSenderId: "1069182109322",
+      appId: "1:1069182109322:web:1d60d48e874bb11c2ecf73",
+      measurementId: "G-XCGWXNTCTS",
+    )
+        : null,
+  );
+
   runApp(const MyApp());
 }
 
@@ -13,9 +28,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Week 5 Firebase Auth',
-      theme: ThemeData(primarySwatch: Colors.green),
-      home: LoginScreen(),
+      title: 'Firebase Auth + API',
+      theme: ThemeData(fontFamily:null,primarySwatch: Colors.green),
+      home: const UserWrapper(), // It checks login state and navigates accordingly
       debugShowCheckedModeBanner: false,
     );
   }

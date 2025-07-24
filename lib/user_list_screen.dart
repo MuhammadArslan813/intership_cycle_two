@@ -1,87 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:intership_cycle_two/userprofile_screen.dart';
-
 import 'api_services.dart';
 
-class UserListScreen extends StatefulWidget {
-  @override
-  _UserListScreenState createState() => _UserListScreenState();
-}
-
-class _UserListScreenState extends State<UserListScreen> {
-  List users = [];
-  bool isLoading = true;
-  String error = '';
-
-  @override
-  void initState() {
-    super.initState();
-    loadUsers();
-  }
-
-  Future<void> loadUsers() async {
-    try {
-      final data = await ApiService.fetchUsers();
-      setState(() {
-        users = data;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        error = "Failed to fetch data. Please check your internet connection or try again later.";
-        isLoading = false;
-      });
-    }
-  }
+class UserListScreen extends StatelessWidget {
+  const UserListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('User List')),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : error.isNotEmpty
-          ? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, color: Colors.red, size: 40),
-            SizedBox(height: 10),
-            Text(
-              error,
-              style: TextStyle(fontSize: 16, color: Colors.red),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  isLoading = true;
-                  error = '';
-                });
-                loadUsers(); // retry
-              },
-              child: Text("Retry"),
-            )
-          ],
-        ),
-      )
-          : ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (context, index) {
-          final user = users[index];
-          return ListTile(
-            title: Text(user['name']),
-            subtitle: Text(user['email']),
-            leading: CircleAvatar(
-              backgroundColor: Colors.blue[100],
-              child: Text('👤', style: TextStyle(fontSize: 20)),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => UserProfileScreen(user: user),
+      backgroundColor: const Color(0xFFF6F6F6),
+      appBar: AppBar(
+        title: const Text("User List"),
+        backgroundColor: Colors.teal,
+        centerTitle: true,
+      ),
+      body: FutureBuilder<List<Map>>(
+        future: ApiService().fetchUsers(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError || !snapshot.hasData) {
+            return const Center(child: Text("Failed to fetch users"));
+          }
+
+          final users = snapshot.data!;
+          return ListView.separated(
+            padding: const EdgeInsets.all(16),
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemCount: users.length,
+            itemBuilder: (context, index) {
+              final user = users[index];
+
+              // Use Dicebear API which works reliably
+              final avatarUrl = "https://api.dicebear.com/7.x/adventurer/png?seed=${user['id']}";
+
+              return Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  leading: CircleAvatar(
+                    radius: 28,
+                    backgroundColor: Colors.grey.shade200,
+                    backgroundImage: NetworkImage(avatarUrl),
+                    onBackgroundImageError: (_, __) {},
+                    child: const Icon(Icons.person, color: Colors.grey),
+                  ),
+                  title: Text(
+                    user['name'],
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  subtitle: Text(
+                    user['email'],
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.teal),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => UserProfileScreen(user: user),
+                      ),
+                    );
+                  },
                 ),
               );
             },

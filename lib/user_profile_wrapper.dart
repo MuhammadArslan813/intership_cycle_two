@@ -1,25 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intership_cycle_two/userprofile_screen.dart';
+import 'login_screen.dart';
+import 'user_list_screen.dart';
 
-import 'auth_services.dart';
-
-class UserProfileWrapper extends StatelessWidget {
-  final AuthService _auth = AuthService();
-
-  UserProfileWrapper({super.key});
+class UserWrapper extends StatelessWidget {
+  const UserWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _auth.getUserProfile(),
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return Center(child: CircularProgressIndicator());
-        if (snapshot.hasData) {
-          final user = snapshot.data!;
-          return UserProfileScreen(user: user);
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        } else if (snapshot.hasData) {
+          return const UserListScreen();
         } else {
-          return Scaffold(body: Center(child: Text('No user data found')));
+          return LoginScreen();
         }
       },
     );

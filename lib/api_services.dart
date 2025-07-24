@@ -1,16 +1,15 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static Future<List> fetchUsers() async {
-    final url = Uri.parse('https://jsonplaceholder.typicode.com/users');
-    final response = await http.get(url);
+  Future<List<Map>> fetchUsers() async {
+    final res = await http.get(Uri.parse("https://jsonplaceholder.typicode.com/users"));
 
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
+    if (res.statusCode == 200) {
+      final List data = json.decode(res.body);
+      return data.cast<Map>();
     } else {
-      throw Exception('Failed to load users');
+      throw Exception("Failed to load users");
     }
   }
 }
