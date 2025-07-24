@@ -60,3 +60,17 @@ This week we enhanced the user interface of key screens to follow modern Flutter
 - Reusable and modern input decorations.
 - More visually pleasing color palette with teal accent.
 
+## 📅 Week 6: State Management with Provider
+
+### ✅ Tasks Completed:
+
+- Replaced `setState` with Provider for state management.
+- Created `TaskProvider` to manage task operations.
+- UI updates in real-time via `ChangeNotifier`.
+- Added animations with `AnimatedContainer` and `Dismissible`.
+
+### 🛠 Improvements:
+- More scalable architecture.
+- Clean separation of logic (Model-Provider-UI).
+- Better performance and responsiveness.
+
